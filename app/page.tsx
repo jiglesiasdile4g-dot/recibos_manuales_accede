@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface Libro {
   id: string;
@@ -40,6 +41,7 @@ function fechaHoy(): string {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [nombreColegio, setNombreColegio] = useState("");
   const [codigoColegio, setCodigoColegio] = useState("");
   const [nombreAlumno, setNombreAlumno] = useState("");
@@ -140,6 +142,18 @@ export default function Home() {
         estado: "Nuevo",
       },
     ]);
+  };
+
+  const [saliendo, setSaliendo] = useState(false);
+  const cerrarSesion = async () => {
+    try {
+      setSaliendo(true);
+      await fetch("/api/logout", { method: "POST" });
+      router.push("/login");
+      router.refresh();
+    } finally {
+      setSaliendo(false);
+    }
   };
 
   useEffect(() => {
@@ -317,6 +331,19 @@ export default function Home() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            <button
+              onClick={cerrarSesion}
+              disabled={saliendo}
+              className="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 transition-colors flex items-center gap-1.5 disabled:opacity-50"
+              title="Cerrar sesión"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span className="hidden sm:inline">Salir</span>
+            </button>
             <button
               onClick={limpiarFormulario}
               className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
