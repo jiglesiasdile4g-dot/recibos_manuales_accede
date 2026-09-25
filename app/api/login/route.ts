@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import {
   createSessionToken,
   getCredentials,
   SESSION_COOKIE_NAME,
   SESSION_DURATION_MS,
+  verifySessionToken,
 } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -28,8 +28,18 @@ export async function POST(request: Request) {
     }
 
     const token = await createSessionToken(userInput);
-    const store = await cookies();
-    store.set(SESSION_COOKIE_NAME, token, {
+    const sanity = await verifySessionToken(token);
+    if (!sanity) {
+      return NextResponse.json(
+        { error: "Error generando la sesión." },
+        { status: 500 }
+      );
+    }
+
+    const response = NextResponse.json({ ok: true });
+    response.cookies.set({
+      name: SESSION_COOKIE_NAME,
+      value: token,
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
@@ -37,7 +47,7 @@ export async function POST(request: Request) {
       maxAge: Math.floor(SESSION_DURATION_MS / 1000),
     });
 
-    return NextResponse.json({ ok: true });
+    return response;
   } catch (err) {
     console.error(err);
     return NextResponse.json(
