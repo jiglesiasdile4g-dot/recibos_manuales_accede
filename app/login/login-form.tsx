@@ -128,7 +128,7 @@ function LoginFormInner({
         </div>
 
         <p className="text-center text-xs text-slate-400 mt-6">
-          © {new Date().getFullYear()} — Accede · Comunidad de Madrid
+          © {new Date().getFullYear()} — Desarrollado por Tecniloc para Ig4
         </p>
       </div>
     </div>
