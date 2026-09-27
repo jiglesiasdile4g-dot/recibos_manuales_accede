@@ -328,14 +328,29 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
   return (
     <div className="min-h-screen w-full">
       <header className="no-print bg-white border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-slate-800">
-              Generador de Recibos
-            </h1>
-            <p className="text-sm text-slate-500">
-              Entrega de ejemplares escolares
-            </p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div>
+              <h1 className="text-xl font-bold text-slate-800">
+                Generador de Recibos
+              </h1>
+              <p className="text-sm text-slate-500">
+                Entrega de ejemplares escolares
+              </p>
+            </div>
+            <div
+              className="hidden md:flex items-center gap-2 text-xs text-slate-400 select-none ml-4 pl-4 border-l border-slate-200"
+              title={`v${version.version} · build ${version.buildDate} · commit ${version.buildCommit}`}
+            >
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <code className="font-mono text-[11px] text-slate-500 tracking-tight">
+                v{version.version}
+              </code>
+              <span className="text-slate-300">·</span>
+              <code className="font-mono text-[10px] text-slate-400">
+                {version.buildCommit.slice(0, 7)}
+              </code>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <button
@@ -830,32 +845,16 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
             </div>
           </div>
         </section>
-        <footer className="no-print mt-10 border-t border-slate-200 py-5 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-slate-500">
-          <div>
-            <span className="font-semibold text-slate-600">{version.appName}</span>
-            <span className="mx-2 text-slate-300">·</span>
-            <span>
-              Versión{" "}
-              <code className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-[11px] text-slate-700">
-                v{version.version}
-              </code>
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span>
-              Build: <span className="font-medium text-slate-600">{version.buildDate}</span>
-            </span>
-            <span className="hidden sm:inline text-slate-300">|</span>
-            <span className="flex items-center gap-1">
-              Commit:{" "}
-              <code
-                className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-[11px] text-slate-700"
-                title={version.buildCommit}
-              >
-                {version.buildCommit.slice(0, 8)}
-              </code>
-            </span>
-          </div>
+        <footer className="no-print mt-10 border-t border-slate-100 py-5 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex items-center justify-center text-center">
+          <p className="text-xs text-slate-400">
+            <span className="mr-1">©</span>
+            <span>{new Date().getFullYear()}</span>
+            <span className="mx-1.5 text-slate-300">·</span>
+            <span>Desarrollado por</span>
+            <span className="font-semibold text-slate-500 mx-1">Tecniloc</span>
+            <span className="text-slate-300">para</span>
+            <span className="font-semibold text-slate-500 ml-1">Ig4</span>
+          </p>
         </footer>
       </main>
     </div>
