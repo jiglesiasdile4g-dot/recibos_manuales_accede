@@ -340,15 +340,11 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
             </div>
             <div
               className="hidden md:flex items-center gap-2 text-xs text-slate-400 select-none ml-4 pl-4 border-l border-slate-200"
-              title={`v${version.version} · build ${version.buildDate} · commit ${version.buildCommit}`}
+              title={`Versión ${version.version} · ${version.buildDate}`}
             >
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
               <code className="font-mono text-[11px] text-slate-500 tracking-tight">
                 v{version.version}
-              </code>
-              <span className="text-slate-300">·</span>
-              <code className="font-mono text-[10px] text-slate-400">
-                {version.buildCommit.slice(0, 7)}
               </code>
             </div>
           </div>
