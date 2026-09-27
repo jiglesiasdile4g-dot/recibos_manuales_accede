@@ -136,7 +136,7 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
     }
   };
 
-  const limpiarFormulario = () => {
+  const limpiarDatosRecibo = () => {
     setNombreAlumno("");
     setCursoGrupo("");
     setFechaEntrega(fechaHoy());
@@ -149,6 +149,11 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
         estado: "Nuevo",
       },
     ]);
+  };
+
+  const limpiarDatosCentro = () => {
+    setNombreColegio("");
+    setCodigoColegio("");
   };
 
   const [saliendo, setSaliendo] = useState(false);
@@ -363,12 +368,6 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
               <span className="hidden sm:inline">Salir</span>
             </button>
             <button
-              onClick={limpiarFormulario}
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors"
-            >
-              Limpiar
-            </button>
-            <button
               onClick={generarPDF}
               disabled={!puedeImprimir || exportandoPdf}
               className={`px-4 py-2 rounded-lg text-sm font-medium shadow transition-colors flex items-center gap-2 ${
@@ -391,9 +390,23 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section className="no-print space-y-6">
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-100">
-              Datos del centro (se guardan automáticamente)
-            </h2>
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+              <h2 className="text-lg font-semibold text-slate-800">
+                Datos del centro <span className="text-sm font-normal text-slate-400">(se guardan automáticamente)</span>
+              </h2>
+              <button
+                onClick={limpiarDatosCentro}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-800 transition-colors flex items-center gap-1.5"
+                title="Limpiar solo los datos del centro"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                Limpiar centro
+              </button>
+            </div>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -423,9 +436,23 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-            <h2 className="text-lg font-semibold text-slate-800 mb-4 pb-2 border-b border-slate-100">
-              Datos del recibo
-            </h2>
+            <div className="flex items-center justify-between mb-4 pb-2 border-b border-slate-100">
+              <h2 className="text-lg font-semibold text-slate-800">
+                Datos del recibo
+              </h2>
+              <button
+                onClick={limpiarDatosRecibo}
+                className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-800 transition-colors flex items-center gap-1.5"
+                title="Limpiar solo los datos del recibo (alumno, fecha, ejemplares)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                Limpiar recibo
+              </button>
+            </div>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">
