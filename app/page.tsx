@@ -1,20 +1,13 @@
 import HomeClient from "./home-client";
-import { getAppVersion, type AppVersion } from "@/lib/version";
+import { getAppVersion } from "@/lib/version";
 
 export default function HomePage() {
   const v = getAppVersion();
-  const version: {
-    version: string;
-    buildDate: string;
-    buildCommit: string;
-    appName: string;
-  } = {
-    version: v.version,
-    buildDate: v.buildDate,
-    buildCommit: v.buildCommit,
-    appName: v.appName,
+  const version = {
+    version: String(v.version || "0.0.0"),
+    buildDate: String(v.buildDate || new Date().toISOString().slice(0, 10)),
+    buildCommit: String(v.buildCommit || "local"),
+    appName: String(v.appName || "Generador de Recibos"),
   };
   return <HomeClient version={version} />;
 }
-
-export type { AppVersion };

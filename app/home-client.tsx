@@ -345,11 +345,11 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
             </div>
             <div
               className="hidden md:flex items-center gap-2 text-xs text-slate-400 select-none ml-4 pl-4 border-l border-slate-200"
-              title={`Versión ${version.version} · ${version.buildDate}`}
+              title={`Versión ${String(version?.version ?? "")} · ${String(version?.buildDate ?? "")}`}
             >
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
               <code className="font-mono text-[11px] text-slate-500 tracking-tight">
-                v{version.version}
+                v{String(version?.version ?? "0.0.0")}
               </code>
             </div>
           </div>
