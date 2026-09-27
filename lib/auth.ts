@@ -2,7 +2,7 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 
 const COOKIE_NAME = "rm_session";
-const TOKEN_DURATION_MS = 1000 * 60 * 60 * 24 * 7;
+const TOKEN_DURATION_MS = 1000 * 60 * 60;
 
 function getAuthSecret(): Buffer {
   const raw = process.env.AUTH_SECRET;
