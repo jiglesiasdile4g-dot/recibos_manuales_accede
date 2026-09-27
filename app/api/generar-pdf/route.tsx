@@ -268,6 +268,101 @@ async function cargarLogo(nombre: string) {
   }
 }
 
+function ReciboPage({
+  data,
+  logoAccede,
+  logoMadrid,
+}: {
+  data: GenerarPdfBody;
+  logoAccede: string | null;
+  logoMadrid: string | null;
+}) {
+  return (
+    <Page size="A4" style={styles.page}>
+      <View style={styles.pageInner}>
+        <View style={styles.body}>
+          <View style={styles.header}>
+            <View style={styles.logoBox}>
+              {logoAccede ? (
+                <PdfImage src={logoAccede} style={styles.logo} />
+              ) : (
+                <View style={styles.logo} />
+              )}
+            </View>
+            <View style={styles.titleBlock}>
+              {data.nombreColegio ? (
+                <Text style={styles.colegio}>{data.nombreColegio}</Text>
+              ) : null}
+              <Text style={styles.title}>RECIBO DE ENTREGA DE EJEMPLARES</Text>
+            </View>
+            <View style={styles.logoBoxRight}>
+              {logoMadrid ? (
+                <PdfImage src={logoMadrid} style={styles.logoRight} />
+              ) : (
+                <View style={styles.logoRight} />
+              )}
+            </View>
+          </View>
+
+          <View style={styles.datosRow}>
+            <Text style={styles.label}>Nombre del alumno/a:</Text>
+            <Text style={styles.subrayado}>{data.nombreAlumno}</Text>
+          </View>
+
+          <View style={styles.grid3}>
+            <View style={styles.cell}>
+              <Text style={styles.smallLabel}>Curso / Grupo</Text>
+              <Text style={styles.subrayado}>{data.cursoGrupo}</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.smallLabel}>Fecha de entrega</Text>
+              <Text style={styles.subrayado}>{data.fechaEntrega}</Text>
+            </View>
+            <View style={styles.cell}>
+              <Text style={styles.smallLabel}>Ubicación</Text>
+              <Text style={styles.subrayado}>{data.ubicacion}</Text>
+            </View>
+          </View>
+
+          <View style={styles.tablaWrap}>
+            <View style={styles.tablaHead}>
+              <Text style={{ ...styles.tablaHeadCell, ...styles.colCodigo }}>Código</Text>
+              <Text style={{ ...styles.tablaHeadCell, ...styles.colTitulo }}>Título</Text>
+              <Text style={{ ...styles.tablaHeadCell, ...styles.colEstado }}>Estado</Text>
+            </View>
+            {data.libros.map((libro, i) => (
+              <View key={i} style={styles.tablaRow}>
+                <Text style={{ ...styles.tablaCell, ...styles.colCodigo, fontFamily: "Courier" }}>
+                  {libro.codigo}
+                </Text>
+                <Text style={{ ...styles.tablaCell, ...styles.colTitulo }}>{libro.titulo}</Text>
+                <Text style={{ ...styles.tablaCell, ...styles.colEstado }}>{libro.estado}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.pageFooter}>
+          <View style={styles.firmaBlock}>
+            <View style={styles.firmaSeparator} />
+            <Text style={styles.firmaLabel}>FIRMA DEL ALUMNO / PADRE</Text>
+            <Text style={styles.firmaNombre}>{data.nombreAlumno}</Text>
+          </View>
+
+          <Text style={styles.legal}>
+            Los datos personales recogidos serán tratados de conformidad con el Reglamento Europeo (UE) 2016/679
+            de Protección de Datos. La información relativa a los destinatarios de los datos, la finalidad y las
+            medidas de seguridad, así como cualquier información adicional relativa a la protección de sus datos
+            personales, podrá consultarla en la documentación del centro. Ante el responsable del tratamiento
+            podrá ejercer, entre otros, sus derechos de acceso, rectificación, supresión, oposición y limitación de
+            tratamiento.
+          </Text>
+        </View>
+      </View>
+    </Page>
+  );
+}
+
 function ReciboDocument({
   data,
   logoAccede,
@@ -282,88 +377,8 @@ function ReciboDocument({
       author={data.nombreColegio || "Generador de Recibos"}
       subject={`Recibo de entrega - ${data.nombreAlumno}`}
     >
-      <Page size="A4" style={styles.page}>
-        <View style={styles.pageInner}>
-          <View style={styles.body}>
-            <View style={styles.header}>
-              <View style={styles.logoBox}>
-                {logoAccede ? (
-                  <PdfImage src={logoAccede} style={styles.logo} />
-                ) : (
-                  <View style={styles.logo} />
-                )}
-              </View>
-              <View style={styles.titleBlock}>
-                {data.nombreColegio ? (
-                  <Text style={styles.colegio}>{data.nombreColegio}</Text>
-                ) : null}
-                <Text style={styles.title}>RECIBO DE ENTREGA DE EJEMPLARES</Text>
-              </View>
-              <View style={styles.logoBoxRight}>
-                {logoMadrid ? (
-                  <PdfImage src={logoMadrid} style={styles.logoRight} />
-                ) : (
-                  <View style={styles.logoRight} />
-                )}
-              </View>
-            </View>
-
-            <View style={styles.datosRow}>
-              <Text style={styles.label}>Nombre del alumno/a:</Text>
-              <Text style={styles.subrayado}>{data.nombreAlumno}</Text>
-            </View>
-
-            <View style={styles.grid3}>
-              <View style={styles.cell}>
-                <Text style={styles.smallLabel}>Curso / Grupo</Text>
-                <Text style={styles.subrayado}>{data.cursoGrupo}</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.smallLabel}>Fecha de entrega</Text>
-                <Text style={styles.subrayado}>{data.fechaEntrega}</Text>
-              </View>
-              <View style={styles.cell}>
-                <Text style={styles.smallLabel}>Ubicación</Text>
-                <Text style={styles.subrayado}>{data.ubicacion}</Text>
-              </View>
-            </View>
-
-            <View style={styles.tablaWrap}>
-              <View style={styles.tablaHead}>
-                <Text style={{ ...styles.tablaHeadCell, ...styles.colCodigo }}>Código</Text>
-                <Text style={{ ...styles.tablaHeadCell, ...styles.colTitulo }}>Título</Text>
-                <Text style={{ ...styles.tablaHeadCell, ...styles.colEstado }}>Estado</Text>
-              </View>
-              {data.libros.map((libro, i) => (
-                <View key={i} style={styles.tablaRow}>
-                  <Text style={{ ...styles.tablaCell, ...styles.colCodigo, fontFamily: "Courier" }}>
-                    {libro.codigo}
-                  </Text>
-                  <Text style={{ ...styles.tablaCell, ...styles.colTitulo }}>{libro.titulo}</Text>
-                  <Text style={{ ...styles.tablaCell, ...styles.colEstado }}>{libro.estado}</Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.pageFooter}>
-            <View style={styles.firmaBlock}>
-              <View style={styles.firmaSeparator} />
-              <Text style={styles.firmaLabel}>FIRMA DEL ALUMNO / PADRE</Text>
-              <Text style={styles.firmaNombre}>{data.nombreAlumno}</Text>
-            </View>
-
-            <Text style={styles.legal}>
-              Los datos personales recogidos serán tratados de conformidad con el Reglamento Europeo (UE) 2016/679
-              de Protección de Datos. La información relativa a los destinatarios de los datos, la finalidad y las
-              medidas de seguridad, así como cualquier información adicional relativa a la protección de sus datos
-              personales, podrá consultarla en la documentación del centro. Ante el responsable del tratamiento
-              podrá ejercer, entre otros, sus derechos de acceso, rectificación, supresión, oposición y limitación de
-              tratamiento.
-            </Text>
-          </View>
-        </View>
-      </Page>
+      <ReciboPage data={data} logoAccede={logoAccede} logoMadrid={logoMadrid} />
+      <ReciboPage data={data} logoAccede={logoAccede} logoMadrid={logoMadrid} />
     </Document>
   );
 }
