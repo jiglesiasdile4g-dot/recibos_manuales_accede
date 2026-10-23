@@ -21,6 +21,7 @@ const STORAGE_KEY = "recibos_manuales:datos_colegio";
 const ESTADOS_LIBRO = ["Nuevo", "Usado", "Deteriorado"];
 const CURSOS = ["1º", "2º", "3º", "4º", "5º", "6º"];
 const GRUPOS = ["A", "B", "C", "D"];
+const UBICACIONES = ["Biblioteca", "Sala de Profesores", "Sala de Informática"];
 const ASIGNATURAS_PREDETERMINADAS = [
   "Inglés",
   "Lengua",
@@ -576,13 +577,30 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
                 <label className="block text-sm font-medium text-slate-700 mb-1">
                   Ubicación de entrega
                 </label>
-                <input
-                  type="text"
-                  value={ubicacion}
-                  onChange={(e) => setUbicacion(e.target.value)}
-                  placeholder="Ej: Biblioteca"
-                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                />
+                <select
+                  value={UBICACIONES.includes(ubicacion) ? ubicacion : OPCION_OTRO}
+                  onChange={(e) => {
+                    const valor = e.target.value;
+                    setUbicacion(valor === OPCION_OTRO ? "" : valor);
+                  }}
+                  className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                >
+                  {UBICACIONES.map((u) => (
+                    <option key={u} value={u}>
+                      {u}
+                    </option>
+                  ))}
+                  <option value={OPCION_OTRO}>{OPCION_OTRO}</option>
+                </select>
+                {!UBICACIONES.includes(ubicacion) && (
+                  <input
+                    type="text"
+                    value={ubicacion}
+                    onChange={(e) => setUbicacion(e.target.value)}
+                    placeholder="Escribe la ubicación"
+                    className="w-full mt-1.5 px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                  />
+                )}
               </div>
 
               <div>
