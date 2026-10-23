@@ -19,6 +19,8 @@ interface Libro {
 
 const STORAGE_KEY = "recibos_manuales:datos_colegio";
 const ESTADOS_LIBRO = ["Nuevo", "Usado", "Deteriorado"];
+const CURSOS = ["1º", "2º", "3º", "4º", "5º", "6º"];
+const GRUPOS = ["A", "B", "C", "D"];
 const ASIGNATURAS_PREDETERMINADAS = [
   "Inglés",
   "Lengua",
@@ -52,10 +54,15 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
   const [nombreColegio, setNombreColegio] = useState("");
   const [codigoColegio, setCodigoColegio] = useState("");
   const [nombreAlumno, setNombreAlumno] = useState("");
-  const [cursoGrupo, setCursoGrupo] = useState("");
+  const [curso, setCurso] = useState("");
+  const [cursoManual, setCursoManual] = useState(false);
+  const [grupo, setGrupo] = useState("");
+  const [grupoManual, setGrupoManual] = useState(false);
   const [fechaEntrega, setFechaEntrega] = useState(fechaHoy());
   const [ubicacion, setUbicacion] = useState("Biblioteca");
   const [observaciones, setObservaciones] = useState("");
+
+  const cursoGrupo = `${curso.trim()}${grupo.trim()}`;
 
   useEffect(() => {
     try {
@@ -139,7 +146,10 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
 
   const limpiarDatosRecibo = () => {
     setNombreAlumno("");
-    setCursoGrupo("");
+    setCurso("");
+    setCursoManual(false);
+    setGrupo("");
+    setGrupoManual(false);
     setFechaEntrega(fechaHoy());
     setUbicacion("Biblioteca");
     setObservaciones("");
@@ -475,13 +485,78 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Curso / Grupo <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="text"
-                    value={cursoGrupo}
-                    onChange={(e) => setCursoGrupo(e.target.value)}
-                    placeholder="Ej: 3º Primaria / P3A"
-                    className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
-                  />
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="col-span-2 space-y-1.5">
+                      <select
+                        value={cursoManual ? OPCION_OTRO : curso}
+                        onChange={(e) => {
+                          const valor = e.target.value;
+                          if (valor === OPCION_OTRO) {
+                            setCursoManual(true);
+                            setCurso("");
+                          } else {
+                            setCursoManual(false);
+                            setCurso(valor);
+                          }
+                        }}
+                        aria-label="Curso"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                      >
+                        <option value="">Curso</option>
+                        {CURSOS.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                        <option value={OPCION_OTRO}>{OPCION_OTRO}</option>
+                      </select>
+                      {cursoManual && (
+                        <input
+                          type="text"
+                          value={curso}
+                          onChange={(e) => setCurso(e.target.value)}
+                          placeholder="Escribe el curso"
+                          aria-label="Curso manual"
+                          className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        />
+                      )}
+                    </div>
+                    <div className="col-span-1 space-y-1.5">
+                      <select
+                        value={grupoManual ? OPCION_OTRO : grupo}
+                        onChange={(e) => {
+                          const valor = e.target.value;
+                          if (valor === OPCION_OTRO) {
+                            setGrupoManual(true);
+                            setGrupo("");
+                          } else {
+                            setGrupoManual(false);
+                            setGrupo(valor);
+                          }
+                        }}
+                        aria-label="Grupo"
+                        className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white"
+                      >
+                        <option value="">Grupo</option>
+                        {GRUPOS.map((g) => (
+                          <option key={g} value={g}>
+                            {g}
+                          </option>
+                        ))}
+                        <option value={OPCION_OTRO}>{OPCION_OTRO}</option>
+                      </select>
+                      {grupoManual && (
+                        <input
+                          type="text"
+                          value={grupo}
+                          onChange={(e) => setGrupo(e.target.value)}
+                          placeholder="Escribe el grupo"
+                          aria-label="Grupo manual"
+                          className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                        />
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -781,7 +856,7 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
                     <div className="col-span-1 font-semibold text-slate-700">
                       Nombre:
                     </div>
-                    <div className="col-span-2 text-slate-900 border-b border-slate-300 pb-0.5 pl-1">
+                    <div className="col-span-2 text-slate-900 border-b border-slate-300 pb-0.5 pl-1 font-semibold">
                       {nombreAlumno || "\u00A0"}
                     </div>
                   </div>
@@ -789,7 +864,7 @@ export default function HomeClient({ version }: { version: VersionInfo }) {
                     <div className="col-span-1 font-semibold text-slate-700">
                       Curso/Grupo:
                     </div>
-                    <div className="col-span-2 text-slate-900 border-b border-slate-300 pb-0.5 pl-1">
+                    <div className="col-span-2 text-slate-900 border-b border-slate-300 pb-0.5 pl-1 font-semibold">
                       {cursoGrupo || "\u00A0"}
                     </div>
                   </div>
