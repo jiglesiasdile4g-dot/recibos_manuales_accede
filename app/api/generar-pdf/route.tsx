@@ -29,6 +29,7 @@ interface GenerarPdfBody {
   cursoGrupo: string;
   fechaEntrega: string;
   ubicacion: string;
+  observaciones?: string;
   libros: LibroApi[];
 }
 
@@ -73,6 +74,7 @@ function validarBody(body: unknown): { ok: true; data: GenerarPdfBody } | { ok: 
       cursoGrupo: b.cursoGrupo.trim(),
       fechaEntrega: b.fechaEntrega.trim(),
       ubicacion: (b.ubicacion as string).trim(),
+      observaciones: typeof b.observaciones === "string" ? b.observaciones.trim() : "",
       libros,
     },
   };
@@ -106,6 +108,20 @@ const styles = StyleSheet.create({
   firmaBlock: {
     marginBottom: 12,
     paddingHorizontal: 24,
+  },
+  observacionesBlock: {
+    marginBottom: 12,
+  },
+  observacionesLabel: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: "#0f172a",
+    marginBottom: 2,
+  },
+  observacionesTexto: {
+    fontSize: 9,
+    color: "#334155",
+    lineHeight: 1.4,
   },
   firmaSeparator: {
     width: "100%",
@@ -272,10 +288,12 @@ function ReciboPage({
   data,
   logoAccede,
   logoMadrid,
+  conObservaciones,
 }: {
   data: GenerarPdfBody;
   logoAccede: string | null;
   logoMadrid: string | null;
+  conObservaciones: boolean;
 }) {
   return (
     <Page size="A4" style={styles.page}>
@@ -344,6 +362,12 @@ function ReciboPage({
 
         <View style={styles.pageFooter}>
           <View style={styles.firmaBlock}>
+            {conObservaciones && data.observaciones ? (
+              <View style={styles.observacionesBlock}>
+                <Text style={styles.observacionesLabel}>Observaciones:</Text>
+                <Text style={styles.observacionesTexto}>{data.observaciones}</Text>
+              </View>
+            ) : null}
             <View style={styles.firmaSeparator} />
             <Text style={styles.firmaLabel}>FIRMA DEL ALUMNO / PADRE</Text>
             <Text style={styles.firmaNombre}>{data.nombreAlumno}</Text>
@@ -377,8 +401,18 @@ function ReciboDocument({
       author={data.nombreColegio || "Generador de Recibos"}
       subject={`Recibo de entrega - ${data.nombreAlumno}`}
     >
-      <ReciboPage data={data} logoAccede={logoAccede} logoMadrid={logoMadrid} />
-      <ReciboPage data={data} logoAccede={logoAccede} logoMadrid={logoMadrid} />
+      <ReciboPage
+        data={data}
+        logoAccede={logoAccede}
+        logoMadrid={logoMadrid}
+        conObservaciones
+      />
+      <ReciboPage
+        data={data}
+        logoAccede={logoAccede}
+        logoMadrid={logoMadrid}
+        conObservaciones={false}
+      />
     </Document>
   );
 }
